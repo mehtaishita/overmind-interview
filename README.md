@@ -1,6 +1,9 @@
 # Overmind Interview - Game
 
 
+## Credits
+
+I have based my solution on examples found in https://github.com/aptos-labs/aptos-core/tree/main/aptos-move/move-examples
 
 ## Original Instructions:
 
