@@ -7,9 +7,18 @@ module overmind_interview::Game {
         amount: u64,
     }
 
-    public fun setup_basic_game() {
-        // let withdrawal_vec: vector<FixedPoint32> = create_withdrawal_vector();
-        // let num_depositor = 3;
+    struct GameSession has key {
+        order: vector<FixedPoint32>,
+        limit: u8
+    }
+
+    public fun init_game(owner: &signer) {
+        let game = GameSession {
+            order: create_basic_withdrawal_vector(),
+            limit: 3,
+        };
+
+        move_to(owner, game);
 
     }
 
@@ -29,6 +38,8 @@ module overmind_interview::Game {
 
     public entry fun deposit_amount(account: &signer, amount: u64)
     acquires DepositBank {
+        // Check if number of depositors have been met
+
         let account_addr = signer::address_of(account);
         if (!exists<DepositBank>(account_addr)) {
             move_to(account, DepositBank {
@@ -51,14 +62,27 @@ module overmind_interview::Game {
         let depositor = borrow_global_mut<DepositBank>(account_addr);
         let current_amt = depositor.amount;
 
-        // example withdraw fraction
-        let static_fraction = fixed_point32::create_from_rational(1, 2);
-
-        let withdraw_amt = fixed_point32::multiply_u64(current_amt, static_fraction);
+        let withdraw_amt = calculate_withdraw_amount(current_amt);
         depositor.amount = current_amt - withdraw_amt;
 
         withdraw_amt
 
+    }
+
+    public fun calculate_withdraw_amount(avail_amt: u64): u64
+    {
+        if (avail_amt <= 1) {
+            return 0
+        };
+
+        // example withdraw fraction
+        // let static_fraction = fixed_point32::create_from_rational(1, 2);
+
+        let static_vec = &mut create_basic_withdrawal_vector();
+        let last_fraction = vector::pop_back(static_vec);
+
+        // Multiply will truncate any fractional part of the value
+        fixed_point32::multiply_u64(avail_amt, last_fraction)
     }
 
 }

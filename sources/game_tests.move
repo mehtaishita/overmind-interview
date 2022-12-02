@@ -58,7 +58,40 @@ module overmind_interview::GameTest {
             prize == 5, 
             0
         );
+    }
 
+    #[test]
+    public entry fun withdraw_math_is_correct() {
+        // Setup
+        let avail_amt = 80; 
+
+        // Action
+        let actual_amt = Game::calculate_withdraw_amount(avail_amt);
+        let test_amt = 40;
+
+        // Test
+        assert!(
+            actual_amt == test_amt,
+            0
+        );
+    }
+
+    #[test]
+    public entry fun withdraw_amount_edge_cases() {
+        // will build this out as part of refactor
+
+        // Setup
+        let avail_amt = 1; 
+
+        // Action
+        let actual_amt = Game::calculate_withdraw_amount(avail_amt);
+        let test_amt = 0;
+
+        // Test
+        assert!(
+            actual_amt == test_amt,
+            0
+        );
     }
 
     #[test]
