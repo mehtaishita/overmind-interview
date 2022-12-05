@@ -74,15 +74,18 @@ module overmind_interview::Game {
         if (avail_amt <= 1) {
             return 0
         };
+        
+        // todo: use the next fraction from global storage
+        // todo: this funtion would use the annotation 'acquires GameSession'
 
-        // example withdraw fraction
-        // let static_fraction = fixed_point32::create_from_rational(1, 2);
+        // let order = &mut borrow_global_mut<GameSession>(account_addr).order;
+        // let next_fraction = vector::pop_back(order);
 
-        let static_vec = &mut create_basic_withdrawal_vector();
-        let last_fraction = vector::pop_back(static_vec);
+        // static withdraw fraction
+        let static_fraction = fixed_point32::create_from_rational(1, 2);
 
         // Multiply will truncate any fractional part of the value
-        fixed_point32::multiply_u64(avail_amt, last_fraction)
+        fixed_point32::multiply_u64(avail_amt, static_fraction)
     }
 
 }
